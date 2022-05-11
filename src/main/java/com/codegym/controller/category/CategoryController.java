@@ -1,4 +1,4 @@
-package com.codegym.controller.user;
+package com.codegym.controller.category;
 
 import com.codegym.model.Category;
 import com.codegym.service.category.ICategoryService;
@@ -13,7 +13,6 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/categories")
 public class CategoryController {
-
     @Autowired
     private ICategoryService categoryService;
 
