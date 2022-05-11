@@ -17,66 +17,74 @@ import java.util.Optional;
 public class PostController {
 
 
-
     @Autowired
     private IPostService postService;
 
     @GetMapping
     public ResponseEntity<Iterable<Post>> findAllPost() {
-        Iterable <Post> posts = postService.findAll();
-        if (!posts.iterator().hasNext()){
+        Iterable<Post> posts = postService.findAll();
+        if (!posts.iterator().hasNext()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(posts,HttpStatus.OK);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
-        Optional <Post> postOptional = postService.findById(id);
-        if (!postOptional.isPresent()){
+        Optional<Post> postOptional = postService.findById(id);
+        if (!postOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(postOptional.get(),HttpStatus.OK);
+        return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Post> createPost(@ModelAttribute Post post) {
         Post createdPost = postService.save(post);
-        return new ResponseEntity<>(createdPost,HttpStatus.OK);
+        return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
 
 
     @PostMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id , @ModelAttribute Post postEdit) {
-         LocalDate today = LocalDate.now();
-         Optional <Post> postOptional = postService.findById(id);
-         if (!postOptional.isPresent()){
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-         }
-         Post post = postOptional.get();
-         post.setTitle(postEdit.getTitle());
-         post.setDateCreate(today);
-         post.setDescription(postEdit.getDescription());
-         post.setAvatarPost(postEdit.getAvatarPost());
-         post.setUser(postEdit.getUser());
-         post.setStatus(postEdit.getStatus());
-         post.setCategory(postEdit.getCategory());
-         postService.save(postEdit);
-         return new ResponseEntity<>(post,HttpStatus.OK);
+    public ResponseEntity<Post> updatePost(@PathVariable Long id, @ModelAttribute Post postEdit) {
+        LocalDate today = LocalDate.now();
+        Optional<Post> postOptional = postService.findById(id);
+        if (!postOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Post post = postOptional.get();
+        post.setTitle(postEdit.getTitle());
+        post.setDateCreate(today);
+        post.setDescription(postEdit.getDescription());
+        post.setAvatarPost(postEdit.getAvatarPost());
+        post.setUser(postEdit.getUser());
+        post.setStatus(postEdit.getStatus());
+        post.setCategory(postEdit.getCategory());
+        postService.save(postEdit);
+        return new ResponseEntity<>(post, HttpStatus.OK);
 
     }
-
-
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Post> deletePost (@PathVariable Long id) {
-        Optional <Post> optionalPost = postService.findById(id);
-        if (!optionalPost.isPresent()){
+    public ResponseEntity<Post> deletePost(@PathVariable Long id) {
+        Optional<Post> optionalPost = postService.findById(id);
+        if (!optionalPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         postService.removeById(id);
-        return new ResponseEntity<>(optionalPost.get(),HttpStatus.OK);
+        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
+
+    @GetMapping("findStatus/{id}")
+    public ResponseEntity<Iterable<Post>> findPostStatus(@PathVariable Long id) {
+        Iterable<Post> posts = postService.findPostByIdStatus(id);
+        if (!posts.iterator().hasNext()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
 
 }

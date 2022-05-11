@@ -33,4 +33,12 @@ public class PostService implements IPostService{
     public Post save(Post post) {
         return postRepository.save(post);
     }
+
+    @Override
+    public Iterable<Post> findPostByIdStatus(Long statusId) {
+        return  postRepository.findAllByStatus_Id(statusId);
+    }
+
+
+
 }
