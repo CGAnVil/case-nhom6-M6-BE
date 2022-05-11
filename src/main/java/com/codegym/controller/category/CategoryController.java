@@ -1,4 +1,4 @@
-package com.codegym.controller.user;
+package com.codegym.controller.category;
 
 import com.codegym.model.Category;
 import com.codegym.service.category.ICategoryService;
