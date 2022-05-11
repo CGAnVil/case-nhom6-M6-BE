@@ -27,6 +27,10 @@ public class SignUpForm {
     @Size(min = 6, max = 40)
     private String password;
 
+    @NotBlank
+    @Size(min = 6, max = 40)
+    private String rePassword;
+
     public String getRePassword() {
         return rePassword;
     }
@@ -34,10 +38,6 @@ public class SignUpForm {
     public void setRePassword(String rePassword) {
         this.rePassword = rePassword;
     }
-
-    @NotBlank
-    @Size(min = 6, max = 40)
-    private String rePassword;
 
     public String getFullName() {
         return fullName;
