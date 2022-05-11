@@ -8,12 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/posts")
 public class PostController {
+
+
 
     @Autowired
     private IPostService postService;
@@ -45,13 +48,14 @@ public class PostController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id , @ModelAttribute Post postEdit) {
+         LocalDate today = LocalDate.now();
          Optional <Post> postOptional = postService.findById(id);
          if (!postOptional.isPresent()){
              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
          }
          Post post = postOptional.get();
          post.setTitle(postEdit.getTitle());
-         post.setDateCreate(postEdit.getDateCreate());
+         post.setDateCreate(today);
          post.setDescription(postEdit.getDescription());
          post.setAvatarPost(postEdit.getAvatarPost());
          post.setUser(postEdit.getUser());
