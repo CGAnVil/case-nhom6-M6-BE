@@ -48,7 +48,6 @@ public class User {
     private String avatar;
     private String status;
 
-
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
