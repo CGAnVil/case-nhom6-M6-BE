@@ -46,6 +46,8 @@ public class PostController {
     }
 
 
+
+    // cập nhât bài post
     @PostMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @ModelAttribute Post postEdit) {
         LocalDate today = LocalDate.now();
@@ -77,6 +79,8 @@ public class PostController {
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
+
+    // hiện thị bài post đang public
     @GetMapping("findStatus/{id}")
     public ResponseEntity<Iterable<Post>> findPostStatus(@PathVariable Long id) {
         Iterable<Post> posts = postService.findPostByIdStatus(id);
@@ -87,6 +91,7 @@ public class PostController {
     }
 
 
+    // thay đổi trạng thái status
     @PostMapping("/editPost/{id}")
     public ResponseEntity<?> editPost(@ModelAttribute PostForm postForm, @PathVariable Long id) {
         Optional <Post> postOptional = postService.findById(id);
