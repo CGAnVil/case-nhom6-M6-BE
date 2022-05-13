@@ -1,6 +1,7 @@
 package com.codegym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -46,7 +47,9 @@ public class User {
     private String address;
     private String phone;
     private String avatar;
-    private String status;
+
+    @ManyToOne
+    private UserStatus status;
 
 
     @ManyToMany(fetch = FetchType.LAZY)

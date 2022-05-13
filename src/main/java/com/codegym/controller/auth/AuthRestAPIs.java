@@ -7,12 +7,15 @@ import com.codegym.dto.response.ResponseMessage;
 import com.codegym.model.Role;
 import com.codegym.model.RoleName;
 import com.codegym.model.User;
+import com.codegym.model.UserStatus;
 import com.codegym.security.jwt.JwtAuthTokenFilter;
 import com.codegym.security.jwt.JwtProvider;
 import com.codegym.security.service.UserPrinciple;
 import com.codegym.service.Account.role.IRoleService;
 import com.codegym.service.Account.user.IUserService;
+import com.codegym.service.UserStatus.IUserStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -47,6 +51,9 @@ public class AuthRestAPIs {
 
     @Autowired
     JwtAuthTokenFilter jwtAuthTokenFilter;
+
+    @Autowired
+    IUserStatusService userStatusService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -99,6 +106,7 @@ public class AuthRestAPIs {
             }
         });
 
+        user.setStatus(new UserStatus(1L, "Active"));
         user.setRoles(roles);
         userService.save(user);
 
