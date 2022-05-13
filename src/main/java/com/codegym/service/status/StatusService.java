@@ -21,16 +21,16 @@ public class StatusService implements IStatusService{
 
     @Override
     public Optional<Status> findById(Long id) {
-        return Optional.empty();
+        return statusRepository.findById(id);
     }
 
     @Override
     public void removeById(Long id) {
-
+           statusRepository.deleteById(id);
     }
 
     @Override
     public Status save(Status status) {
-        return null;
+        return statusRepository.save(status);
     }
 }

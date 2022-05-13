@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -23,6 +22,7 @@ public class Post {
 
     private String title;
 
+    @Column(columnDefinition="LONGTEXT")
     private String content;
 
     private String description;

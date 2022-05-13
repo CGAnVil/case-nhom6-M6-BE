@@ -80,7 +80,7 @@ public class PostController {
     }
 
 
-    // hiện thị bài post đang public
+    // hiện thị bài post theo status
     @GetMapping("findStatus/{id}")
     public ResponseEntity<Iterable<Post>> findPostStatus(@PathVariable Long id) {
         Iterable<Post> posts = postService.findPostByIdStatus(id);
@@ -93,7 +93,7 @@ public class PostController {
 
     // thay đổi trạng thái status
     @PostMapping("/editPost/{id}")
-    public ResponseEntity<?> editPost(@ModelAttribute PostForm postForm, @PathVariable Long id) {
+    public ResponseEntity<?> editPost(@RequestBody PostForm postForm, @PathVariable Long id) {
         Optional <Post> postOptional = postService.findById(id);
         if (!postOptional.isPresent()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
