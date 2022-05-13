@@ -30,7 +30,7 @@ public class User {
     @Size(min = 3, max = 50)
     private String userName;
 
-    @JsonIgnore
+
     @NotBlank
     @Size(min = 6, max = 100)
     private String password;
@@ -48,7 +48,7 @@ public class User {
     private String avatar;
     private String status;
 
-    @JsonIgnore
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
