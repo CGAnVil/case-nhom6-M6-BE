@@ -1,6 +1,7 @@
 package com.codegym.service.post;
 
 import com.codegym.model.Post;
+import com.codegym.model.UserStatus;
 import com.codegym.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 package com.codegym.service.status;
 
 import com.codegym.model.Status;
+import com.codegym.model.UserStatus;
 import com.codegym.repository.IStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

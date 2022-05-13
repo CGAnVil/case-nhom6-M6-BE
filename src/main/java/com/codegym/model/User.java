@@ -1,6 +1,7 @@
 package com.codegym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class User {
     @Size(min = 3, max = 50)
     private String userName;
 
-    @JsonIgnore
+
     @NotBlank
     @Size(min = 6, max = 100)
     private String password;
@@ -46,9 +47,12 @@ public class User {
     private String address;
     private String phone;
     private String avatar;
-    private String status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToOne
+    private UserStatus status;
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
