@@ -41,5 +41,14 @@ public class Post {
     @ManyToOne
     private Status status;
 
-
+    public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status) {
+        this.dateLastFix = dateLastFix;
+        this.title = title;
+        this.content = content;
+        this.description = description;
+        this.avatarPost = avatarPost;
+        this.category = category;
+        this.user = user;
+        this.status = status;
+    }
 }
