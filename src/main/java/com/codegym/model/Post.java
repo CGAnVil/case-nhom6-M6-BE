@@ -21,9 +21,12 @@ public class Post {
 
     private LocalDate dateCreate = LocalDate.now();
 
+    @Column(columnDefinition="LONGTEXT")
     private String title;
 
+    @Column(columnDefinition="LONGTEXT")
     private String content;
+
 
     private String description;
 
