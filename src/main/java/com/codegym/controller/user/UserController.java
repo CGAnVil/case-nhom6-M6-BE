@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.path}")
+    @Value("${upload.pathUser}")
     private String uploadPath;
 
     @GetMapping
@@ -34,6 +34,8 @@ public class UserController {
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id) {
