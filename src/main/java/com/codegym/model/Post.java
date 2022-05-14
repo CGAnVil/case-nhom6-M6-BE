@@ -21,6 +21,8 @@ public class Post {
 
     private LocalDate dateCreate = LocalDate.now();
 
+    private LocalDate dateLastFix;
+
     private String title;
 
     private String content;
