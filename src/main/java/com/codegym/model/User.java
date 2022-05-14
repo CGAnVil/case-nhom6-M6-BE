@@ -46,7 +46,9 @@ public class User {
     private String address;
     private String phone;
     private String avatar;
-    private String status;
+
+    @ManyToOne
+    private UserStatus status;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

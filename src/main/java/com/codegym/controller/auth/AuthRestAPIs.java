@@ -9,6 +9,7 @@ import com.codegym.dto.response.ResponseMessage;
 import com.codegym.model.Role;
 import com.codegym.model.RoleName;
 import com.codegym.model.User;
+import com.codegym.model.UserStatus;
 import com.codegym.security.jwt.JwtAuthTokenFilter;
 import com.codegym.security.jwt.JwtProvider;
 import com.codegym.security.service.UserPrinciple;
@@ -102,7 +103,7 @@ public class AuthRestAPIs {
                     roles.add(userRole);
             }
         });
-
+        user.setStatus(new UserStatus(1L, "Active"));
         user.setRoles(roles);
         userService.save(user);
 

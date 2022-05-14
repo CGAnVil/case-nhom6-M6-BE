@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Service
 public class PostService implements IPostService{
-
     @Autowired
     private IPostRepository postRepository;
 
@@ -39,6 +38,13 @@ public class PostService implements IPostService{
         return  postRepository.findAllByStatus_Id(statusId);
     }
 
+    @Override
+    public void blockPost(Long post_id) {
+        postRepository.blockPost(post_id);
+    }
 
-
+    @Override
+    public Iterable<Post> findAllPostByUser(Long user_id) {
+        return postRepository.findAllPostByUser(user_id);
+    }
 }

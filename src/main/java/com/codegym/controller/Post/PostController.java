@@ -16,8 +16,6 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/posts")
 public class PostController {
-
-
     @Autowired
     private IPostService postService;
 
@@ -29,6 +27,13 @@ public class PostController {
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<Iterable<Post>> findAllPostByUser(@PathVariable Long id) {
+        Iterable<Post> posts = postService.findAllPostByUser(id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
@@ -44,8 +49,6 @@ public class PostController {
         Post createdPost = postService.save(post);
         return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
-
-
 
     // cập nhât bài post
     @PostMapping("/{id}")
@@ -68,17 +71,15 @@ public class PostController {
 
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable Long id) {
         Optional<Post> optionalPost = postService.findById(id);
         if (!optionalPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        postService.removeById(id);
+        postService.blockPost(id);
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
-
 
     // hiện thị bài post đang public
     @GetMapping("findStatus/{id}")
@@ -89,7 +90,6 @@ public class PostController {
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
 
     // thay đổi trạng thái status
     @PostMapping("/editPost/{id}")
@@ -103,6 +103,4 @@ public class PostController {
         postService.save(posts);
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
-
-
 }

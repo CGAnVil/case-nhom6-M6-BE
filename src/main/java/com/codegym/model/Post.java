@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Entity
 @Data
@@ -32,12 +32,12 @@ public class Post {
     @ManyToOne
     private Category category;
 
-
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Status status;
 
-
+    @ManyToOne
+    private PostState state;
 }

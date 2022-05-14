@@ -35,12 +35,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<User> blockUser(@PathVariable Long id) {
         Optional<User> userOptional = userService.findById(id);
         if (!userOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        userService.removeById(id);
+        userService.blockUser(id);
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
+
 }
