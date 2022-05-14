@@ -38,6 +38,16 @@ public class PostController {
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
+
+    @GetMapping("users/{id}")
+    public ResponseEntity<Iterable<Post>> showAllByUser(@PathVariable("id") Long idUser) {
+        Iterable<Post> posts = postService.findPostByIdUser(idUser);
+        if (!posts.iterator().hasNext()) {
+            new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Post> createPost(@ModelAttribute Post post) {
         Post createdPost = postService.save(post);
