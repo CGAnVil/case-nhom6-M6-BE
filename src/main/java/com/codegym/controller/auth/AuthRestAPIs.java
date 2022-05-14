@@ -113,6 +113,7 @@ public class AuthRestAPIs {
         return new ResponseEntity<>(new ResponseMessage("Thành Công"), HttpStatus.OK);
     }
 
+
 //    @PutMapping("changeProfile")
 //    public ResponseEntity<?> changeProfile(HttpServletRequest request, @Valid @RequestBody ChangeProfileForm changeProfileForm) {
 //        String jwt = jwtAuthTokenFilter.getJwt(request);
@@ -177,13 +178,5 @@ public class AuthRestAPIs {
 //        }
 //    }
 //
-//    @GetMapping("findUserByUsername/{username}")
-//    public ResponseEntity<?> findUserByuserName(@PathVariable("username") String username) {
-//        Optional<User> user = userService.findByUsername(username);
-//        if (!user.isPresent()) {
-//            return  new ResponseEntity<>(new ResponseMessage("notfounduser"),HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(user.get(), HttpStatus.OK);
-//    }
 
 }
