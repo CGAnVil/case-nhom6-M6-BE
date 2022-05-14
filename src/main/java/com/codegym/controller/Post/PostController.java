@@ -1,13 +1,20 @@
 package com.codegym.controller.Post;
 
 
+import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
 import com.codegym.service.post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -15,6 +22,9 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/posts")
 public class PostController {
+
+    @Value("${upload.pathPost}")
+    private String uploadPath;
 
 
     @Autowired
@@ -39,6 +49,30 @@ public class PostController {
     }
 
 
+   @PostMapping
+   public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm){
+       MultipartFile avatarPost = postForm.getAvatarPost();
+       if(avatarPost.getSize() !=0){
+           String filename = postForm.getAvatarPost().getOriginalFilename();
+           long currentTime = System.currentTimeMillis();
+           filename = currentTime + filename;
+
+           try {
+               FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+
+           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+       }else{
+           String filename = "";
+           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+       }
+   }
+
+
     @GetMapping("users/{id}")
     public ResponseEntity<Iterable<Post>> showAllByUser(@PathVariable("id") Long idUser) {
         Iterable<Post> posts = postService.findPostByIdUser(idUser);
@@ -48,11 +82,6 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Post> createPost(@ModelAttribute Post post) {
-        Post createdPost = postService.save(post);
-        return new ResponseEntity<>(createdPost, HttpStatus.OK);
-    }
 
 
     @PostMapping("/{id}")

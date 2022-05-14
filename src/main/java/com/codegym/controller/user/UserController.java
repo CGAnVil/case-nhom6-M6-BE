@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.path}")
+    @Value("${upload.pathUser}")
     private String uploadPath;
 
     @GetMapping
