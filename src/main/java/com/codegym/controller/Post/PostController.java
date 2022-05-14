@@ -48,6 +48,7 @@ public class PostController {
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
+
    @PostMapping
    public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm){
        MultipartFile avatarPost = postForm.getAvatarPost();
@@ -70,6 +71,17 @@ public class PostController {
            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
        }
    }
+
+
+    @GetMapping("users/{id}")
+    public ResponseEntity<Iterable<Post>> showAllByUser(@PathVariable("id") Long idUser) {
+        Iterable<Post> posts = postService.findPostByIdUser(idUser);
+        if (!posts.iterator().hasNext()) {
+            new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
 
 
     @PostMapping("/{id}")
