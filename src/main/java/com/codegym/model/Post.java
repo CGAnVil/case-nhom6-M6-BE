@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+import java.util.Date;
 
 @Entity
 @Data
@@ -21,9 +21,16 @@ public class Post {
 
     private LocalDate dateCreate = LocalDate.now();
 
+
+    private LocalDate dateLastFix;
+
+    @Column(columnDefinition="LONGTEXT")
+
     private String title;
 
+    @Column(columnDefinition="LONGTEXT")
     private String content;
+
 
     private String description;
 
@@ -31,6 +38,7 @@ public class Post {
 
     @ManyToOne
     private Category category;
+
 
     @ManyToOne
     private User user;
@@ -40,4 +48,15 @@ public class Post {
 
     @ManyToOne
     private PostState state;
+    public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status, PostState state) {
+        this.dateLastFix = dateLastFix;
+        this.title = title;
+        this.content = content;
+        this.description = description;
+        this.avatarPost = avatarPost;
+        this.category = category;
+        this.user = user;
+        this.status = status;
+        this.state = state;
+    }
 }

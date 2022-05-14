@@ -1,6 +1,7 @@
 package com.codegym.service.post;
 
 import com.codegym.model.Post;
+import com.codegym.model.UserStatus;
 import com.codegym.repository.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,10 @@ public class PostService implements IPostService{
     public void blockPost(Long post_id) {
         postRepository.blockPost(post_id);
     }
-
     @Override
-    public Iterable<Post> findAllPostByUser(Long user_id) {
-        return postRepository.findAllPostByUser(user_id);
+    public Iterable<Post> findPostByIdUser(Long idUser) {
+        return postRepository.findAllByUser_Id(idUser);
     }
+
+
 }

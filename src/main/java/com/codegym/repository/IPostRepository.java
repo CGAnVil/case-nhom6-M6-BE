@@ -10,12 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface IPostRepository extends JpaRepository<Post , Long> {
-    Iterable<Post> findAllByStatus_Id (Long statusId);
+
+    Iterable <Post> findAllByStatus_Id (Long statusId);
+
+    Iterable <Post> findAllByUser_Id (Long idUser);
+
 
     @Modifying
     @Query(value = "update posts set posts.state_id = 2 where posts.id = ?1", nativeQuery = true)
     void blockPost(Long post_id);
 
-    @Query(value = "select * from posts where user_id = ?1", nativeQuery = true)
-    Iterable<Post> findAllPostByUser(Long user_id);
+
 }

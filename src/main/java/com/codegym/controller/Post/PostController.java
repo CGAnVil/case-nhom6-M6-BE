@@ -5,10 +5,16 @@ import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
 import com.codegym.service.post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -16,6 +22,11 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/posts")
 public class PostController {
+
+    @Value("${upload.pathPost}")
+    private String uploadPath;
+
+
     @Autowired
     private IPostService postService;
 
@@ -30,7 +41,7 @@ public class PostController {
 
     @GetMapping("/{id}/users")
     public ResponseEntity<Iterable<Post>> findAllPostByUser(@PathVariable Long id) {
-        Iterable<Post> posts = postService.findAllPostByUser(id);
+        Iterable<Post> posts = postService.findPostByIdUser(id);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
@@ -71,6 +82,7 @@ public class PostController {
 
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable Long id) {
         Optional<Post> optionalPost = postService.findById(id);
@@ -81,7 +93,6 @@ public class PostController {
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
-    // hiện thị bài post đang public
     @GetMapping("findStatus/{id}")
     public ResponseEntity<Iterable<Post>> findPostStatus(@PathVariable Long id) {
         Iterable<Post> posts = postService.findPostByIdStatus(id);
@@ -91,16 +102,6 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    // thay đổi trạng thái status
-    @PostMapping("/editPost/{id}")
-    public ResponseEntity<?> editPost(@ModelAttribute PostForm postForm, @PathVariable Long id) {
-        Optional <Post> postOptional = postService.findById(id);
-        if (!postOptional.isPresent()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        Post posts = postOptional.get();
-        posts.setStatus(postForm.getStatusForm());
-        postService.save(posts);
-        return new ResponseEntity<>(posts,HttpStatus.OK);
-    }
+
+
 }
