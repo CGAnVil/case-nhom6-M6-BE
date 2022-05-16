@@ -48,7 +48,8 @@ public class Post {
 
     @ManyToOne
     private PostState state;
-    public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status, PostState state) {
+
+    public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status) {
         this.dateLastFix = dateLastFix;
         this.title = title;
         this.content = content;
@@ -57,6 +58,5 @@ public class Post {
         this.category = category;
         this.user = user;
         this.status = status;
-        this.state = state;
     }
 }
