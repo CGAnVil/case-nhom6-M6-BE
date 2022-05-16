@@ -40,6 +40,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public void blockUser(Long user_id) {
+        userRepository.blockUser(user_id);
+    }
+
+    @Override
     public Optional<User> findByUsername(String user_name) {
         return userRepository.findByUserName(user_name);
     }

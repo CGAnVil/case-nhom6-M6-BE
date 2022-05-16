@@ -39,6 +39,13 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/users")
+    public ResponseEntity<Iterable<Post>> findAllPostByUser(@PathVariable Long id) {
+        Iterable<Post> posts = postService.findPostByIdUser(id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -48,42 +55,13 @@ public class PostController {
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
-
-   @PostMapping
-   public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm){
-       MultipartFile avatarPost = postForm.getAvatarPost();
-       if(avatarPost.getSize() !=0){
-           String filename = postForm.getAvatarPost().getOriginalFilename();
-           long currentTime = System.currentTimeMillis();
-           filename = currentTime + filename;
-
-           try {
-               FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }else{
-           String filename = "";
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }
-   }
-
-
-    @GetMapping("users/{id}")
-    public ResponseEntity<Iterable<Post>> showAllByUser(@PathVariable("id") Long idUser) {
-        Iterable<Post> posts = postService.findPostByIdUser(idUser);
-        if (!posts.iterator().hasNext()) {
-            new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Post> createPost(@ModelAttribute Post post) {
+        Post createdPost = postService.save(post);
+        return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
 
-
-
+    // cập nhât bài post
     @PostMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @ModelAttribute Post postEdit) {
         LocalDate today = LocalDate.now();
@@ -111,7 +89,7 @@ public class PostController {
         if (!optionalPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        postService.removeById(id);
+        postService.blockPost(id);
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
