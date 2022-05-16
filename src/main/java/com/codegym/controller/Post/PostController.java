@@ -4,12 +4,14 @@ package com.codegym.controller.Post;
 
 import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
+import com.codegym.model.PostState;
 import com.codegym.model.Status;
 import com.codegym.service.post.IPostService;
 import com.codegym.service.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,7 @@ import java.util.Optional;
 public class PostController {
 
 
-    @Value("${upload.pathPost}")
+    @Value("${upload-path}")
     private String uploadPath;
 
     @Autowired
@@ -72,12 +74,10 @@ public class PostController {
         return new ResponseEntity<>(statuses,HttpStatus.OK);
     }
 
-
-
-
-   @PostMapping
-   public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm){
-       MultipartFile avatarPost = postForm.getAvatarPost();
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = {"application/json"},
+           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, headers = ("content-type=multipart/*"))
+   public ResponseEntity<?> importContractRateFile(@ModelAttribute PostForm postForm) throws IOException {
+               MultipartFile avatarPost = postForm.getAvatarPost();
        if(avatarPost.getSize() !=0){
            String filename = postForm.getAvatarPost().getOriginalFilename();
            long currentTime = System.currentTimeMillis();
@@ -90,13 +90,46 @@ public class PostController {
            }
 
            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+           post.setState(new PostState(1L, "Active"));
            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
        }else{
            String filename = "";
            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+           post.setState(new PostState(1L, "Active"));
            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
        }
-   }
+    }
+
+
+
+
+//   @PostMapping
+//   @RequestMapping(value = "/", method = RequestMethod.POST, produces = {"application/json"},
+//           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, headers = ("content-type=multipart/*"))
+//   public ResponseEntity<Post> createNewPost(@RequestParam String title, @RequestPart MultipartFile avatarPost){
+//        return new ResponseEntity<>(null);
+//       MultipartFile avatarPost = postForm.getAvatarPost();
+//       if(avatarPost.getSize() !=0){
+//           String filename = postForm.getAvatarPost().getOriginalFilename();
+//           long currentTime = System.currentTimeMillis();
+//           filename = currentTime + filename;
+//
+//           try {
+//               FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
+//           } catch (IOException e) {
+//               e.printStackTrace();
+//           }
+//
+//           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+//           post.setState(new PostState(1L, "Active"));
+//           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+//       }else{
+//           String filename = "";
+//           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
+//           post.setState(new PostState(1L, "Active"));
+//           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+//       }
+//   }
 
 
     @GetMapping("users/{id}")

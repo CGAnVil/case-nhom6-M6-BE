@@ -1,6 +1,7 @@
 package com.codegym.dto.request;
 
 import com.codegym.model.Category;
+import com.codegym.model.PostState;
 import com.codegym.model.Status;
 import com.codegym.model.User;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,6 @@ public class PostForm {
     private User user;
 
     private Status status;
+
+    private PostState state;
 }

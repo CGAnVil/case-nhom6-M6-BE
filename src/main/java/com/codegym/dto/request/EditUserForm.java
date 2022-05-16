@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class EditUserForm {
 
 
-    private String email;
 
     private String fullName;
 

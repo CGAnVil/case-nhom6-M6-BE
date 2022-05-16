@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.pathUser}")
+    @Value("${upload-path}")
     private String uploadPath;
 
     @GetMapping
@@ -75,15 +75,16 @@ public class UserController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            user.setEmail(editUserForm.getEmail());
+
             user.setFullName(editUserForm.getFullName());
             user.setAddress(editUserForm.getAddress());
             user.setPhone(editUserForm.getPhone());
             user.setAvatar(filename);
+//            user.setRoles(user.getRoles());
             userService.save(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }else{
-            user.setEmail(editUserForm.getEmail());
+
             user.setFullName(editUserForm.getFullName());
             user.setAddress(editUserForm.getAddress());
             user.setPhone(editUserForm.getPhone());
