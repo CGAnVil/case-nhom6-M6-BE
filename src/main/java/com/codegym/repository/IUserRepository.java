@@ -19,6 +19,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query(value = "update user set user.status_id = 2 where user.id = ?1", nativeQuery = true)
     void blockUser(Long user_id);
 
+    @Modifying
+    @Query(value = "update user set user.status_id = 1 where user.id = ?1", nativeQuery = true)
+    void unBlockUser(Long user_id);
+
     Optional<User> findByUserName(String user_name);
 
     Boolean existsByEmail(String email);

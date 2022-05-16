@@ -56,6 +56,16 @@ public class UserController {
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}/unBlockUser")
+    public ResponseEntity<User> unBlockUser(@PathVariable Long id) {
+        Optional<User> userOptional = userService.findById(id);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.unBlockUser(id);
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+    }
+
     @PostMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @ModelAttribute EditUserForm editUserForm){
         Optional<User> currentUser = userService.findById(id);
