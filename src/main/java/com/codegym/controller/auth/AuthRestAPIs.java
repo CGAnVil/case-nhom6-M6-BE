@@ -1,5 +1,6 @@
 package com.codegym.controller.auth;
 
+import com.codegym.dto.request.ChangePasswordForm;
 import com.codegym.dto.request.LoginForm;
 import com.codegym.dto.request.SignUpForm;
 import com.codegym.dto.response.JwtResponse;
@@ -21,9 +22,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Optional;
@@ -122,7 +125,28 @@ public class AuthRestAPIs {
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
+    @PutMapping("changePassword")
+    public ResponseEntity<?> changePassword(HttpServletRequest request, @RequestBody ChangePasswordForm changePassword) {
+        String jwt = jwtAuthTokenFilter.getJwt(request);
+        String username = jwtProvider.getUserNameFromJwtToken(jwt);
+        User user;
+        try {
+            user = userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found" + username));
+            if (!passwordEncoder.matches(changePassword.getCurrentPassword(), user.getPassword())) {
+//            Mã 600 là lỗi sai mật khẩu hiện tại
+                return new ResponseEntity<>(new ResponseMessage("600"), HttpStatus.OK);
+            } else if (!changePassword.getNewPassword().equals(changePassword.getConfirmNewPassword())) {
+//            Mã 601 là lỗi xác nhận mật khẩu mới sai
+                return new ResponseEntity<>(new ResponseMessage("601"), HttpStatus.OK);
+            }
+            user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+            userService.save(user);
+            return new ResponseEntity<>(new ResponseMessage("ok"), HttpStatus.OK);
 
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 //    @PutMapping("changeProfile")
@@ -146,28 +170,7 @@ public class AuthRestAPIs {
 //        }
 //    }
 //
-//    @PutMapping("changePassword")
-//    public ResponseEntity<?> changePassword(HttpServletRequest request, @RequestBody ChangePasswordForm changePassword) {
-//        String jwt = jwtAuthTokenFilter.getJwt(request);
-//        String username = jwtProvider.getUserNameFromJwtToken(jwt);
-//        User user;
-//        try {
-//            user = userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found" + username));
-//            if (!passwordEncoder.matches(changePassword.getCurrentPassword(), user.getPassword())) {
-////            Mã 600 là lỗi sai mật khẩu hiện tại
-//                return new ResponseEntity<>(new ResponseMessage("600"), HttpStatus.OK);
-//            } else if (!changePassword.getNewPassword().equals(changePassword.getConfirmNewPassword())) {
-////            Mã 601 là lỗi xác nhận mật khẩu mới sai
-//                return new ResponseEntity<>(new ResponseMessage("601"), HttpStatus.OK);
-//            }
-//            user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
-//            userService.save(user);
-//            return new ResponseEntity<>(new ResponseMessage("ok"), HttpStatus.OK);
-//
-//        } catch (UsernameNotFoundException e) {
-//            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.NOT_FOUND);
-//        }
-//    }
+
 //
 //    @PutMapping("changeAvatar")
 //    public ResponseEntity<?> changeAvatar(HttpServletRequest request, @RequestBody ChangeAvatar changeAvatar) {

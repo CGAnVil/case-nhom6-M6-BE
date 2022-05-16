@@ -1,9 +1,12 @@
 package com.codegym.controller.Post;
 
 
+
 import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
+import com.codegym.model.Status;
 import com.codegym.service.post.IPostService;
+import com.codegym.service.status.IStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,12 +26,15 @@ import java.util.Optional;
 @RequestMapping("/posts")
 public class PostController {
 
+
     @Value("${upload.pathPost}")
     private String uploadPath;
 
-
     @Autowired
     private IPostService postService;
+
+    @Autowired
+    private IStatusService statusService;
 
     @GetMapping
     public ResponseEntity<Iterable<Post>> findAllPost() {
@@ -47,6 +53,18 @@ public class PostController {
         }
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
+
+
+    @GetMapping("status")
+    public ResponseEntity<Iterable<Status>> findAllStatus(){
+        Iterable <Status> statuses = statusService.findAll();
+        if (!statuses.iterator().hasNext()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(statuses,HttpStatus.OK);
+    }
+
+
 
 
    @PostMapping
