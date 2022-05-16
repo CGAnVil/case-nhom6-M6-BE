@@ -6,14 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
 @Entity
 @Data
-@Table(name = "user_status")
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserStatus {
-
+@AllArgsConstructor
+public class PostState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

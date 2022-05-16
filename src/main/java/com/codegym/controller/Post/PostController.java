@@ -45,6 +45,13 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/users")
+    public ResponseEntity<Iterable<Post>> findAllPostByUser(@PathVariable Long id) {
+        Iterable<Post> posts = postService.findPostByIdUser(id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -53,6 +60,7 @@ public class PostController {
         }
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
+
 
 
     @GetMapping("status")
@@ -98,10 +106,10 @@ public class PostController {
             new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
+
     }
 
-
-
+    // cập nhât bài post
     @PostMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @ModelAttribute Post postEdit) {
         LocalDate today = LocalDate.now();
@@ -129,7 +137,7 @@ public class PostController {
         if (!optionalPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        postService.removeById(id);
+        postService.blockPost(id);
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
