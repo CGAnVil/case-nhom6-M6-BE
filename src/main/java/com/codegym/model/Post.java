@@ -49,6 +49,7 @@ public class Post {
     @ManyToOne
     private PostState state;
 
+
     public void setDateLastFix(LocalDate dateLastFix) {
         this.dateLastFix = dateLastFix;
     }
@@ -80,6 +81,7 @@ public class Post {
     public void setStatus(Status status) {
         this.status = status;
     }
+
 
     public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status) {
         this.dateLastFix = dateLastFix;
