@@ -27,7 +27,7 @@ import java.util.Optional;
 public class PostController {
 
 
-    @Value("${upload.pathPost}")
+    @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
