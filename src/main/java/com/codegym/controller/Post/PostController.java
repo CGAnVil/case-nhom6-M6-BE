@@ -1,7 +1,6 @@
 package com.codegym.controller.Post;
 
 
-
 import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
 import com.codegym.model.Status;
@@ -25,8 +24,6 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("/posts")
 public class PostController {
-
-
     @Value("${upload.pathPost}")
     private String uploadPath;
 
@@ -51,7 +48,6 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -61,43 +57,37 @@ public class PostController {
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
-
-
     @GetMapping("status")
-    public ResponseEntity<Iterable<Status>> findAllStatus(){
-        Iterable <Status> statuses = statusService.findAll();
-        if (!statuses.iterator().hasNext()){
+    public ResponseEntity<Iterable<Status>> findAllStatus() {
+        Iterable<Status> statuses = statusService.findAll();
+        if (!statuses.iterator().hasNext()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(statuses,HttpStatus.OK);
+        return new ResponseEntity<>(statuses, HttpStatus.OK);
     }
 
+    @PostMapping
+    public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm) {
+        MultipartFile avatarPost = postForm.getAvatarPost();
+        if (avatarPost.getSize() != 0) {
+            String filename = postForm.getAvatarPost().getOriginalFilename();
+            long currentTime = System.currentTimeMillis();
+            filename = currentTime + filename;
 
+            try {
+                FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-
-   @PostMapping
-   public ResponseEntity<Post> createNewPost(@ModelAttribute PostForm postForm){
-       MultipartFile avatarPost = postForm.getAvatarPost();
-       if(avatarPost.getSize() !=0){
-           String filename = postForm.getAvatarPost().getOriginalFilename();
-           long currentTime = System.currentTimeMillis();
-           filename = currentTime + filename;
-
-           try {
-               FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }else{
-           String filename = "";
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }
-   }
-
+            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(), postForm.getUser(), postForm.getStatus());
+            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+        } else {
+            String filename = "";
+            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(), postForm.getUser(), postForm.getStatus());
+            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+        }
+    }
 
     @GetMapping("users/{id}")
     public ResponseEntity<Iterable<Post>> showAllByUser(@PathVariable("id") Long idUser) {
@@ -130,7 +120,6 @@ public class PostController {
 
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable Long id) {
         Optional<Post> optionalPost = postService.findById(id);
@@ -138,6 +127,16 @@ public class PostController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         postService.blockPost(id);
+        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> unblockPost(@PathVariable Long id) {
+        Optional<Post> optionalPost = postService.findById(id);
+        if (!optionalPost.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        postService.unblockPost(id);
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
@@ -149,7 +148,4 @@ public class PostController {
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
-
-
 }

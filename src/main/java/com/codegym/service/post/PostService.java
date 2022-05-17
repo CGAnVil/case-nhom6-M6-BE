@@ -43,6 +43,12 @@ public class PostService implements IPostService{
     public void blockPost(Long post_id) {
         postRepository.blockPost(post_id);
     }
+
+    @Override
+    public void unblockPost(Long post_id) {
+        postRepository.unblockPost(post_id);
+    }
+
     @Override
     public Iterable<Post> findPostByIdUser(Long idUser) {
         return postRepository.findAllByUser_Id(idUser);

@@ -20,5 +20,7 @@ public interface IPostRepository extends JpaRepository<Post , Long> {
     @Query(value = "update posts set posts.state_id = 2 where posts.id = ?1", nativeQuery = true)
     void blockPost(Long post_id);
 
-
+    @Modifying
+    @Query(value = "update posts set posts.state_id = 1 where posts.id = ?1", nativeQuery = true)
+    void unblockPost(Long post_id);
 }
