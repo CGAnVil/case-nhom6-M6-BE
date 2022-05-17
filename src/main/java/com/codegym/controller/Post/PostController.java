@@ -1,7 +1,6 @@
 package com.codegym.controller.Post;
 
 
-
 import com.codegym.dto.request.PostForm;
 import com.codegym.model.Post;
 import com.codegym.model.PostState;
@@ -64,43 +63,40 @@ public class PostController {
     }
 
 
-
     @GetMapping("status")
-    public ResponseEntity<Iterable<Status>> findAllStatus(){
-        Iterable <Status> statuses = statusService.findAll();
-        if (!statuses.iterator().hasNext()){
+    public ResponseEntity<Iterable<Status>> findAllStatus() {
+        Iterable<Status> statuses = statusService.findAll();
+        if (!statuses.iterator().hasNext()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(statuses,HttpStatus.OK);
+        return new ResponseEntity<>(statuses, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST, produces = {"application/json"},
-           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, headers = ("content-type=multipart/*"))
-   public ResponseEntity<?> importContractRateFile(@ModelAttribute PostForm postForm) throws IOException {
-               MultipartFile avatarPost = postForm.getAvatarPost();
-       if(avatarPost.getSize() !=0){
-           String filename = postForm.getAvatarPost().getOriginalFilename();
-           long currentTime = System.currentTimeMillis();
-           filename = currentTime + filename;
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, headers = ("content-type=multipart/*"))
+    public ResponseEntity<?> importContractRateFile(@ModelAttribute PostForm postForm) throws IOException {
+        MultipartFile avatarPost = postForm.getAvatarPost();
+        if (avatarPost.getSize() != 0) {
+            String filename = postForm.getAvatarPost().getOriginalFilename();
+            long currentTime = System.currentTimeMillis();
+            filename = currentTime + filename;
 
-           try {
-               FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
+            try {
+                FileCopyUtils.copy(postForm.getAvatarPost().getBytes(), new File(uploadPath + filename));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           post.setState(new PostState(1L, "Active"));
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }else{
-           String filename = "";
-           Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(),postForm.getUser(), postForm.getStatus());
-           post.setState(new PostState(1L, "Active"));
-           return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
-       }
+            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(), postForm.getUser(), postForm.getStatus());
+            post.setState(new PostState(1L, "Active"));
+            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+        } else {
+            String filename = "";
+            Post post = new Post(postForm.getDateLastFix(), postForm.getTitle(), postForm.getContent(), postForm.getDescription(), filename, postForm.getCategory(), postForm.getUser(), postForm.getStatus());
+            post.setState(new PostState(1L, "Active"));
+            return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
+        }
     }
-
-
 
 
 //   @PostMapping
@@ -144,23 +140,33 @@ public class PostController {
 
     // cập nhât bài post
     @PostMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @ModelAttribute Post postEdit) {
-        LocalDate today = LocalDate.now();
-        Optional<Post> postOptional = postService.findById(id);
-        if (!postOptional.isPresent()) {
+    public ResponseEntity<Post> editPost(@PathVariable Long id, @ModelAttribute PostForm postForm) {
+        Optional<Post> currentPost = postService.findById(id);
+        if (!currentPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Post post = postOptional.get();
-        post.setTitle(postEdit.getTitle());
-        post.setDateCreate(today);
-        post.setDescription(postEdit.getDescription());
-        post.setAvatarPost(postEdit.getAvatarPost());
-        post.setUser(postEdit.getUser());
-        post.setStatus(postEdit.getStatus());
-        post.setCategory(postEdit.getCategory());
-        postService.save(postEdit);
+        Post post = currentPost.get();
+        String filename;
+        MultipartFile avatarPost = postForm.getAvatarPost();
+        if (avatarPost.getSize() != 0) {
+            filename = postForm.getAvatarPost().getOriginalFilename();
+            long currentTime = System.currentTimeMillis();
+            filename = currentTime + filename;
+            post.setAvatarPost(filename);
+            try {
+                FileCopyUtils.copy(avatarPost.getBytes(), new File(uploadPath + filename));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        post.setTitle(postForm.getTitle());
+        post.setContent(postForm.getContent());
+        post.setDateLastFix(postForm.getDateLastFix());
+        post.setDescription(postForm.getDescription());
+        post.setCategory(postForm.getCategory());
+        post.setStatus(postForm.getStatus());
+        postService.save(post);
         return new ResponseEntity<>(post, HttpStatus.OK);
-
     }
 
 
@@ -182,7 +188,6 @@ public class PostController {
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
 
 
 }
