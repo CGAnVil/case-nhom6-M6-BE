@@ -10,6 +10,8 @@ public interface IUserService extends IGeneralService<User> {
 
     void blockUser(Long user_id);
 
+    void unBlockUser(Long user_id);
+
     Optional<User> findByUsername(String username);
 
     Boolean existsByEmail(String email);
