@@ -1,6 +1,5 @@
 package com.codegym.service;
 
-import com.codegym.model.UserStatus;
 
 import java.util.Optional;
 

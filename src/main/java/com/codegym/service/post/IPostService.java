@@ -9,6 +9,8 @@ public interface IPostService extends IGeneralService<Post> {
 
     void blockPost(Long post_id);
 
+    void unblockPost(Long post_id);
+
     void changeStatus(Long id);
 
     void changeStatusPublic(Long id);
