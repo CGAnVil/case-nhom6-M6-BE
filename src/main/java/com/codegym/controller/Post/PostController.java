@@ -53,7 +53,6 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Post> findByIdPost(@PathVariable Long id) {
         Optional<Post> postOptional = postService.findById(id);
@@ -63,12 +62,10 @@ public class PostController {
         return new ResponseEntity<>(postOptional.get(), HttpStatus.OK);
     }
 
-
-
     @GetMapping("status")
-    public ResponseEntity<Iterable<Status>> findAllStatus(){
-        Iterable <Status> statuses = statusService.findAll();
-        if (!statuses.iterator().hasNext()){
+    public ResponseEntity<Iterable<Status>> findAllStatus() {
+        Iterable<Status> statuses = statusService.findAll();
+        if (!statuses.iterator().hasNext()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(statuses,HttpStatus.OK);
@@ -163,7 +160,6 @@ public class PostController {
 
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable Long id) {
         Optional<Post> optionalPost = postService.findById(id);
@@ -185,6 +181,16 @@ public class PostController {
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> unblockPost(@PathVariable Long id) {
+        Optional<Post> optionalPost = postService.findById(id);
+        if (!optionalPost.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        postService.unblockPost(id);
+        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
+    }
+
     @GetMapping("findStatus/{id}")
     public ResponseEntity<Iterable<Post>> findPostStatus(@PathVariable Long id) {
         Iterable<Post> posts = postService.findPostByIdStatus(id);
@@ -193,7 +199,4 @@ public class PostController {
         }
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
-
-
 }

@@ -14,23 +14,20 @@ import java.util.Date;
 @AllArgsConstructor
 @Table(name = "posts")
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate dateCreate = LocalDate.now();
 
-
     private LocalDate dateLastFix;
 
-    @Column(columnDefinition="LONGTEXT")
+    @Column(columnDefinition = "LONGTEXT")
 
     private String title;
 
-    @Column(columnDefinition="LONGTEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
-
 
     private String description;
 
@@ -38,7 +35,6 @@ public class Post {
 
     @ManyToOne
     private Category category;
-
 
     @ManyToOne
     private User user;
