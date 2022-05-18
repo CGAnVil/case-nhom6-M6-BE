@@ -24,7 +24,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.pathUser}")
+    @Value("${upload-path}")
     private String uploadPath;
 
     @Autowired
@@ -53,17 +53,27 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<User> blockUser(@PathVariable Long id) {
         Optional<User> userOptional = userService.findById(id);
         if (!userOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        userService.removeById(id);
+        userService.blockUser(id);
+        return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/unBlockUser")
+    public ResponseEntity<User> unBlockUser(@PathVariable Long id) {
+        Optional<User> userOptional = userService.findById(id);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.unBlockUser(id);
         return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<User> updateUser(PathVariable Long id,@ModelAttribute EditUserForm editUserForm) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @ModelAttribute EditUserForm editUserForm){
         Optional<User> currentUser = userService.findById(id);
         if (!currentUser.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -81,11 +91,12 @@ public class UserController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            user.setEmail(editUserForm.getEmail());
+
             user.setFullName(editUserForm.getFullName());
             user.setAddress(editUserForm.getAddress());
             user.setPhone(editUserForm.getPhone());
             user.setAvatar(filename);
+//            user.setRoles(user.getRoles());
             userService.save(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
@@ -98,5 +109,6 @@ public class UserController {
         }
 
     }
+
 
 }

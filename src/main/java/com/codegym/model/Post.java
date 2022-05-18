@@ -46,6 +46,43 @@ public class Post {
     @ManyToOne
     private Status status;
 
+    @ManyToOne
+    private PostState state;
+
+
+    public void setDateLastFix(LocalDate dateLastFix) {
+        this.dateLastFix = dateLastFix;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAvatarPost(String avatarPost) {
+        this.avatarPost = avatarPost;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+
     public Post(LocalDate dateLastFix, String title, String content, String description, String avatarPost, Category category, User user, Status status) {
         this.dateLastFix = dateLastFix;
         this.title = title;
