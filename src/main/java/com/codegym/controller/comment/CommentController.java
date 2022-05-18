@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("/")
+@CrossOrigin("*")
 @RequestMapping("/comments")
 public class CommentController {
     @Autowired
@@ -58,6 +58,4 @@ public class CommentController {
         commentPostService.removeById(id);
         return new ResponseEntity<>(commentPostOptional.get(), HttpStatus.OK);
     }
-
-
 }
