@@ -49,6 +49,18 @@ public class PostService implements IPostService{
         postRepository.unblockPost(post_id);
     }
 
+
+    @Override
+    public void changeStatus(Long id) {
+        postRepository.changeStatus(id);
+    }
+
+    @Override
+    public void changeStatusPublic(Long id) {
+        postRepository.changeStatusPublic(id);
+    }
+
+
     @Override
     public Iterable<Post> findPostByIdUser(Long idUser) {
         return postRepository.findAllByUser_Id(idUser);

@@ -171,27 +171,5 @@ public class AuthRestAPIs {
 //    }
 //
 
-//
-//    @PutMapping("changeAvatar")
-//    public ResponseEntity<?> changeAvatar(HttpServletRequest request, @RequestBody ChangeAvatar changeAvatar) {
-//        String jwt = jwtAuthTokenFilter.getJwt(request);
-//        String username = jwtProvider.getUserNameFromJwtToken(jwt);
-//        User user;
-//        try {
-//            if (changeAvatar.getAvatar() == null) {
-//                return new ResponseEntity<>(new ResponseMessage("not found"), HttpStatus.OK);
-//            } else {
-//                user = userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found" + username));
-//                user.setAvatar(changeAvatar.getAvatar());
-//                userService.save(user);
-//            }
-//            return new ResponseEntity<>(new ResponseMessage("change avatar successfully"), HttpStatus.OK);
-//
-//        } catch (UsernameNotFoundException e) {
-//            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-
 
 }

@@ -2,6 +2,8 @@ package com.codegym.controller.user;
 
 import com.codegym.model.User;
 import com.codegym.dto.request.EditUserForm;
+import com.codegym.security.jwt.JwtAuthTokenFilter;
+import com.codegym.security.jwt.JwtProvider;
 import com.codegym.service.Account.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -23,8 +24,14 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Value("${upload.pathUser}")
+    @Value("${upload-path}")
     private String uploadPath;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
+    @Autowired
+    JwtAuthTokenFilter jwtAuthTokenFilter;
 
     @GetMapping
     public ResponseEntity<Iterable<User>> findAll(@RequestParam(name = "q") Optional<String> q) {
@@ -34,7 +41,6 @@ public class UserController {
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
 
 
     @GetMapping("/{id}")
@@ -69,30 +75,31 @@ public class UserController {
     @PostMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @ModelAttribute EditUserForm editUserForm){
         Optional<User> currentUser = userService.findById(id);
-        if(!currentUser.isPresent()){
+        if (!currentUser.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         User user = currentUser.get();
         String filename;
         MultipartFile avatar = editUserForm.getAvatar();
-        if (avatar.getSize() != 0){
+        if (avatar.getSize() != 0) {
             filename = editUserForm.getAvatar().getOriginalFilename();
             long currentTime = System.currentTimeMillis();
-            filename = currentTime+filename;
+            filename = currentTime + filename;
             user.setAvatar(filename);
             try {
                 FileCopyUtils.copy(avatar.getBytes(), new File(uploadPath + filename));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            user.setEmail(editUserForm.getEmail());
+
             user.setFullName(editUserForm.getFullName());
             user.setAddress(editUserForm.getAddress());
             user.setPhone(editUserForm.getPhone());
             user.setAvatar(filename);
+//            user.setRoles(user.getRoles());
             userService.save(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
-        }else{
+        } else {
             user.setEmail(editUserForm.getEmail());
             user.setFullName(editUserForm.getFullName());
             user.setAddress(editUserForm.getAddress());

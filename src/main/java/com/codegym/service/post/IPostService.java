@@ -11,6 +11,10 @@ public interface IPostService extends IGeneralService<Post> {
 
     void unblockPost(Long post_id);
 
+    void changeStatus(Long id);
+
+    void changeStatusPublic(Long id);
+
     Iterable<Post> findPostByIdUser(Long idUser);
 
 
