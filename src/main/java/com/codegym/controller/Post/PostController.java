@@ -148,7 +148,7 @@ public class PostController {
         Post post = currentPost.get();
         String filename;
         MultipartFile avatarPost = postForm.getAvatarPost();
-        if (avatarPost.getSize() != 0) {
+        if (avatarPost != null) {
             filename = postForm.getAvatarPost().getOriginalFilename();
             long currentTime = System.currentTimeMillis();
             filename = currentTime + filename;
@@ -158,6 +158,8 @@ public class PostController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            post.setAvatarPost(post.getAvatarPost());
         }
         post.setTitle(postForm.getTitle());
         post.setContent(postForm.getContent());
