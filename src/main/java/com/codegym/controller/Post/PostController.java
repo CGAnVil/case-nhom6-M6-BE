@@ -181,6 +181,16 @@ public class PostController {
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}/BlockPost")
+    public ResponseEntity<Post> blockPost(@PathVariable Long id) {
+        Optional<Post> optionalPost = postService.findById(id);
+        if (!optionalPost.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        postService.blockPost(id);
+        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Post> unblockPost(@PathVariable Long id) {
         Optional<Post> optionalPost = postService.findById(id);
