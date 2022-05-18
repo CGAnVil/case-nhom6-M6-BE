@@ -2,6 +2,7 @@ package com.codegym.controller.auth;
 
 import com.codegym.dto.request.ChangePasswordForm;
 import com.codegym.dto.request.LoginForm;
+import com.codegym.dto.request.LoginRequest;
 import com.codegym.dto.request.SignUpForm;
 import com.codegym.dto.response.JwtResponse;
 import com.codegym.dto.response.ResponseMessage;
@@ -11,6 +12,7 @@ import com.codegym.model.User;
 import com.codegym.model.UserStatus;
 import com.codegym.security.jwt.JwtAuthTokenFilter;
 import com.codegym.security.jwt.JwtProvider;
+import com.codegym.security.service.UserDetailsServiceImpl;
 import com.codegym.security.service.UserPrinciple;
 import com.codegym.service.Account.role.IRoleService;
 import com.codegym.service.Account.user.IUserService;
@@ -22,6 +24,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +59,9 @@ public class AuthRestAPIs {
 
     @Autowired
     IUserStatusService userStatusService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -192,6 +198,34 @@ public class AuthRestAPIs {
 //        }
 //    }
 //
+
+    @PostMapping("/login-social")
+    public ResponseEntity<?> loginSocial(@Valid @RequestBody LoginRequest loginRequest) {
+
+        Optional<User> user = userService.findByEmail(loginRequest.getEmail());
+        if (user.isPresent()) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.get().getUserName());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+//            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(user.get().getUserName(), user.get().getPassword()));
+
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String jwt = jwtProvider.generateJwtToken(authentication);
+            UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+
+            return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getId(), userPrinciple.getFullName(), userPrinciple.getEmail(),
+                    userPrinciple.getPhone(), userPrinciple.getAddress(), userPrinciple.getAvatar(), userPrinciple.getAuthorities()
+            ));
+        } else {
+            return new ResponseEntity<>("Không có tài khoản với email: " + loginRequest.getEmail(), HttpStatus.OK);
+        }
+    }
+
 
 
 }
