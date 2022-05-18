@@ -45,6 +45,12 @@ public class PostService implements IPostService{
     }
 
     @Override
+    public void unblockPost(Long post_id) {
+        postRepository.unblockPost(post_id);
+    }
+
+
+    @Override
     public void changeStatus(Long id) {
         postRepository.changeStatus(id);
     }
