@@ -1,7 +1,5 @@
 package com.codegym.dto.request;
 
-import com.codegym.model.Role;
-import com.codegym.model.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

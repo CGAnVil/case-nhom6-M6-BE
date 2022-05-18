@@ -170,7 +170,18 @@ public class PostController {
         if (!optionalPost.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        postService.blockPost(id);
+        postService.changeStatus(id);
+        return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("changePostsPublic/{id}")
+    public ResponseEntity<Post> changeStatusPublic(@PathVariable Long id) {
+        Optional<Post> optionalPost = postService.findById(id);
+        if (!optionalPost.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        postService.changeStatusPublic(id);
         return new ResponseEntity<>(optionalPost.get(), HttpStatus.OK);
     }
 
