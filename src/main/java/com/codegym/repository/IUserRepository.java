@@ -32,7 +32,4 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     Optional<User> findByFullName(String fullName);
 
     Optional<User> findByEmail(String email);
-
-
-
 }
