@@ -15,6 +15,8 @@ public interface IPostRepository extends JpaRepository<Post , Long> {
 
     Iterable <Post> findAllByUser_Id (Long idUser);
 
+    Iterable <Post> findAllByCategory_Id (Long cateId);
+
 
     @Modifying
     @Query(value = "update posts set posts.state_id = 2 where posts.id = ?1", nativeQuery = true)

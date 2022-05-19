@@ -17,5 +17,6 @@ public interface IPostService extends IGeneralService<Post> {
 
     Iterable<Post> findPostByIdUser(Long idUser);
 
+    Iterable <Post> findPostByCategory(Long cateId);
 
 }
